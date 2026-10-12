@@ -9,6 +9,7 @@
     image_name: "todolist-app:latest"
     host_port: "8085"
     container_port: "80"
+    volume_name: "todolist_data"
 
   tasks:
     - name: Stop and remove existing containers
@@ -17,9 +18,14 @@
         docker rm {{ app_name }} todolist-container 2>/dev/null || true
       changed_when: false
 
-    - name: Deploy To-Do List container via Ansible
+    - name: Ensure persistent Docker volume exists
       shell: |
-        docker run -d --name {{ app_name }} -p {{ host_port }}:{{ container_port }} --restart unless-stopped {{ image_name }}
+        docker volume create {{ volume_name }}
+      changed_when: false
+
+    - name: Deploy To-Do List container with persistent storage via Ansible
+      shell: |
+        docker run -d --name {{ app_name }} -p {{ host_port }}:{{ container_port }} -v {{ volume_name }}:/usr/share/nginx/html/data --restart unless-stopped {{ image_name }}
       register: deploy_result
 
     - name: Verify deployed container
