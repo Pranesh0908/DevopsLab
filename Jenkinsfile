@@ -2,6 +2,7 @@ pipeline {
     agent any
 
     environment {
+        PATH = "C:\\Users\\Hi\\AppData\\Local\\Programs\\DockerDesktop\\resources\\bin;${env.PATH}"
         IMAGE_NAME = 'todolist-app'
         CONTAINER_NAME = 'todolist-container'
         APP_PORT = '8085'
