@@ -1,0 +1,14 @@
+FROM alpine:latest
+
+# Install Ansible and Docker CLI
+RUN apk add --no-cache ansible docker-cli
+
+# Create workspace
+WORKDIR /
+
+# Copy inventory and playbook
+COPY inventory.ini /inventory.ini
+COPY docker-deploy.yml /docker-deploy.yml
+
+# Keep container running for exec commands
+CMD ["tail", "-f", "/dev/null"]
